@@ -2,6 +2,7 @@ package com.notBank.controllers;
 
 import com.notBank.dtos.UserDto;
 import com.notBank.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> save(@RequestBody UserDto dto){
+    public ResponseEntity<UserDto> save(@Valid @RequestBody UserDto dto){
         UserDto userDto = userService.save(dto);
         return ResponseEntity.ok().body(userDto);
     }
