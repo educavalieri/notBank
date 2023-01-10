@@ -43,10 +43,4 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping(value = "/{update}")
-    public ResponseEntity<UserDto> update(@RequestBody UserDto dto){
-        UserDto userDto = userService.update(dto);
-        return ResponseEntity.ok().body(userDto);
-    }
 }

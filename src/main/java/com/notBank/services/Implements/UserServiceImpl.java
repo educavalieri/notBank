@@ -3,7 +3,6 @@ package com.notBank.services.Implements;
 import com.notBank.dtos.UserDto;
 import com.notBank.entities.User;
 import com.notBank.mappers.UserMapper;
-import com.notBank.repositories.RoleRepository;
 import com.notBank.repositories.UserRepository;
 import com.notBank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto update(UserDto dto) {
+    public void update(UserDto dto) {
         User user = userRepository.findByEmail(dto.getEmail());
-        return UserMapper.toDto(userRepository.save(user));
+        userRepository.save(user);
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface UserService {
 
     void delete(Long id) throws Exception;
 
-    UserDto update(UserDto dto);
+    void update(UserDto dto);
 
     UserDto save(UserDto dto);
 

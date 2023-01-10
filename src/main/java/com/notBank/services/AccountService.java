@@ -5,6 +5,6 @@ import com.notBank.repositories.AccountRepository;
 
 public interface AccountService {
 
-    AccountDto createAccount(AccountDto accountDto, String userEmail);
+    AccountDto createAccount(AccountDto accountDto) throws Exception;
 
 }
