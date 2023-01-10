@@ -2,6 +2,8 @@ package com.notBank.entities;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,5 +21,15 @@ public class User {
     private String name;
     private String email;
     private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tb_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 }

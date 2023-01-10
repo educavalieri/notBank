@@ -3,6 +3,7 @@ package com.notBank.services.Implements;
 import com.notBank.dtos.UserDto;
 import com.notBank.entities.User;
 import com.notBank.mappers.UserMapper;
+import com.notBank.repositories.RoleRepository;
 import com.notBank.repositories.UserRepository;
 import com.notBank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,6 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAll() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-//        users.forEach(user -> {
-//            UserDto dto = UserMapper.toDto(user);
-//            userDtos.add(dto);
-//        });
         return users.stream().map(UserMapper::toDto).collect(Collectors.toList());
     }
 
@@ -61,4 +58,5 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.toEntity(dto);
         return UserMapper.toDto(userRepository.save(user));
     }
+
 }
