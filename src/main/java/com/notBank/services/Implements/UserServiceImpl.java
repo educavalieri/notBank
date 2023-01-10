@@ -5,10 +5,11 @@ import com.notBank.entities.User;
 import com.notBank.mappers.UserMapper;
 import com.notBank.repositories.UserRepository;
 import com.notBank.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
