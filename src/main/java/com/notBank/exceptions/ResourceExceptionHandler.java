@@ -3,7 +3,7 @@ package com.notBank.exceptions;
 
 import com.notBank.services.exceptions.DataBaseException;
 import com.notBank.services.exceptions.ResourceNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

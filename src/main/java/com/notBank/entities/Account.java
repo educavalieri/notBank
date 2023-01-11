@@ -1,6 +1,6 @@
 package com.notBank.entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 //import javax.persistence.*;
