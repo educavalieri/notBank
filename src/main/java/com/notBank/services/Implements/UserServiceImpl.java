@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 //import javax.transaction.Transactional;
@@ -24,6 +25,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 //    @Autowired
 //    private AuthService authService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     UserRepository userRepository;
@@ -66,6 +70,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public UserDto save(UserDto dto) {
         User user = UserMapper.toEntity(dto);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         return UserMapper.toDto(userRepository.save(user));
     }
 

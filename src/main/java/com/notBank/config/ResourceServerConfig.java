@@ -31,9 +31,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String[] PUBLIC = { "/oauth/token", "/h2-console/**"};
 
-    private static final String[] OPERATOR_OR_ADMIN = { "/products/**", "/categories/**"};
+    private static final String[] OPERATOR_OR_ADMIN = { "/account/**"};
 
-    private static final String[] ADMIN = {"/users/**"};
+    private static final String[] ADMIN = {"/user/**"};
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
