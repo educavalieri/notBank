@@ -6,7 +6,12 @@ import com.notBank.mappers.UserMapper;
 import com.notBank.repositories.UserRepository;
 import com.notBank.services.UserService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 //import javax.transaction.Transactional;
@@ -15,10 +20,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
+
+//    @Autowired
+//    private AuthService authService;
 
     @Autowired
     UserRepository userRepository;
+
+    private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Override
     public UserDto findById(Long id) throws Exception {
@@ -58,5 +68,22 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.toEntity(dto);
         return UserMapper.toDto(userRepository.save(user));
     }
+
+
+    //-----------------------------------------------------------------------------------
+    //authentication zone:
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        User user = userRepository.findByEmail(username);
+        if (user == null){
+            logger.error("user not found " + username);
+            throw new UsernameNotFoundException("email not found");
+        }
+        logger.info("user found" + username);
+        return user;
+    }
+
 
 }
