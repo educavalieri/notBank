@@ -1,6 +1,7 @@
 package com.notBank.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,8 @@ import java.util.Arrays;
 @EnableResourceServer
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    @Value("${cors.origins}")
+    private String corsOrigins;
     @Autowired
     private Environment env;
 
@@ -48,11 +51,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             http.headers().frameOptions().disable();
         }
 
-        http.authorizeRequests()
-                .antMatchers(PUBLIC).permitAll()
-                .antMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
-                .antMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
-                .antMatchers(ADMIN).hasAnyRole("ADMIN")
+        http.authorizeHttpRequests()
+                .requestMatchers(PUBLIC).permitAll()
+                .requestMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
+                .requestMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
+                .requestMatchers(ADMIN).hasAnyRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.cors().configurationSource(corsConfigurationSource());
@@ -60,11 +63,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
+        String[] origins = corsOrigins.split(",");
+
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOriginPatterns(Arrays.asList("*"));
+        corsConfig.setAllowedOriginPatterns(Arrays.asList(origins));
         corsConfig.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "PATCH"));
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         return source;
