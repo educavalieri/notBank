@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -26,17 +25,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Value("${cors.origins}")
     private String corsOrigins;
+
     @Autowired
     private Environment env;
 
     @Autowired
     private JwtTokenStore tokenStore;
 
-    private static final String[] PUBLIC = { "/oauth/token", "/h2-console/**"};
-
-    private static final String[] OPERATOR_OR_ADMIN = { "/account/**"};
-
-    private static final String[] ADMIN = {"/user/**"};
+    private static final String[] PUBLIC = { "/oauth/token", "/h2-console/**" };
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
@@ -46,23 +42,20 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
-        //h2
-        if(Arrays.asList(env.getActiveProfiles()).contains("test")){
+        // H2
+        if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
             http.headers().frameOptions().disable();
         }
 
-        http.authorizeHttpRequests()
-                .requestMatchers(PUBLIC).permitAll()
-                .requestMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
-                .requestMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
-                .requestMatchers(ADMIN).hasAnyRole("ADMIN")
+        http.authorizeRequests()
+                .antMatchers(PUBLIC).permitAll()
                 .anyRequest().authenticated();
 
         http.cors().configurationSource(corsConfigurationSource());
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
 
         String[] origins = corsOrigins.split(",");
 
@@ -78,7 +71,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     }
 
     @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
+    FilterRegistrationBean<CorsFilter> corsFilter() {
         FilterRegistrationBean<CorsFilter> bean
                 = new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
