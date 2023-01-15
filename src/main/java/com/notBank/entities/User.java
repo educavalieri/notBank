@@ -1,8 +1,8 @@
 package com.notBank.entities;
 
 import lombok.*;
-//import javax.persistence.*;
-import javax.persistence.*;
+//import jakarta.persistence.*;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
