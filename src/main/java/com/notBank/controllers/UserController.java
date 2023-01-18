@@ -44,4 +44,11 @@ public class UserController {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping(value = "/profile")
+    public ResponseEntity<UserDto> findUserAuthenticated(){
+        UserDto dto = userService.findUserAuthenticated();
+        return ResponseEntity.ok().body(dto);
+    }
+
 }

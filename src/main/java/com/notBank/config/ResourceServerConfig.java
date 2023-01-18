@@ -39,6 +39,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String[] ADMIN = {"/user/**"};
 
+    private static final String[] VISITOR = { "/users/profile/**"};
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.tokenStore(tokenStore);
@@ -57,6 +59,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
                 .antMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
                 .antMatchers(ADMIN).hasAnyRole("ADMIN")
+                .antMatchers(VISITOR).authenticated()
                 .anyRequest().authenticated();
         http.cors().configurationSource(corsConfigurationSource());
     }

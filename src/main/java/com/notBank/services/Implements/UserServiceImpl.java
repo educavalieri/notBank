@@ -6,6 +6,8 @@ import com.notBank.mappers.UserMapper;
 import com.notBank.repositories.UserRepository;
 import com.notBank.services.UserService;
 import javax.transaction.Transactional;
+
+import com.notBank.services.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +34,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private AuthService authService;
+
+
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    @Override
-    public UserDto findById(Long id) throws Exception {
-        User user = userRepository.findById(id).orElseThrow(() -> new Exception("User not found"));
-        return UserMapper.toDto(user);
-    }
+//    @Override
+//    public UserDto findById(Long id) throws Exception {
+//        User user = userRepository.findById(id).orElseThrow(() -> new Exception("User not found"));
+//        return UserMapper.toDto(user);
+//    }
 
     @Override
     public UserDto findByEmail(String email) {
@@ -72,6 +78,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User user = UserMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         return UserMapper.toDto(userRepository.save(user));
+    }
+
+    @Transactional
+    public UserDto findById(Long id){
+
+        authService.validateSelfOrAdmin(id);
+
+        User entity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return UserMapper.toDto(entity);
+
+    }
+
+    @Transactional
+    public UserDto findUserAuthenticated(){
+
+        User user = authService.Authenticated();
+        User entity = userRepository.findByEmail(user.getUsername());
+        return UserMapper.toDto(entity);
+
     }
 
 

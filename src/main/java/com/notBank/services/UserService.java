@@ -18,5 +18,7 @@ public interface UserService {
 
     UserDto save(UserDto dto);
 
+    UserDto findUserAuthenticated();
+
 
 }
